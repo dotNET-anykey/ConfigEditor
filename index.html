@@ -1,0 +1,2022 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <title>ConfigEditor</title>
+    <!-- Bootstrap 5 CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <!-- Bootstrap Icons (Optional) -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        padding: 20px;
+        font-family: Arial, sans-serif;
+      }
+
+      .error-message {
+        color: red;
+        margin-top: 5px;
+        font-size: 0.9em;
+      }
+
+      .form-label {
+        font-weight: 500;
+      }
+
+      .json-textarea {
+        width: 100%;
+        height: 673px;
+        resize: vertical;
+        font-family: monospace;
+        padding: 10px;
+      }
+
+      .glass-card {
+        background: rgba(255, 255, 255, 0.85);
+        border-radius: 10px;
+        padding: 20px;
+        margin-bottom: 15px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+
+      .remove-item-btn,
+      .add-item-btn {
+        cursor: pointer;
+        color: red;
+        border: none;
+        background: none;
+        font-size: 1.2em;
+      }
+
+      .add-item-btn {
+        color: #0d6efd;
+        /* Bootstrap primary blue */
+        border: 1px solid #0d6efd;
+        width: 100%;
+      }
+
+      .form-section {
+        max-height: 80vh;
+        overflow-y: auto;
+      }
+
+      .dynamic-list-item {
+        position: relative;
+      }
+
+      .dynamic-list-item .remove-item-btn {
+        position: absolute;
+        right: 10px;
+        top: 10px;
+      }
+
+      /* Toggle Switch Size */
+      .form-switch .form-check-input {
+        width: 3em;
+        height: 1.5em;
+        margin-left: 1em;
+      }
+
+      /* Copy Button Positioning */
+      .json-container {
+        position: relative;
+      }
+
+      .copy-btn {
+        top: 10px;
+        right: 10px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+      <!-- Tabs Navigation -->
+      <ul class="nav nav-tabs" id="configTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+          <button
+            class="nav-link active"
+            id="iikoConfig-tab"
+            data-bs-toggle="tab"
+            data-bs-target="#iikoConfig"
+            type="button"
+            role="tab"
+            aria-controls="iikoConfig"
+            aria-selected="true"
+          >
+            iikoConfig
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button
+            class="nav-link"
+            id="kioskConfig-tab"
+            data-bs-toggle="tab"
+            data-bs-target="#kioskConfig"
+            type="button"
+            role="tab"
+            aria-controls="kioskConfig"
+            aria-selected="false"
+          >
+            kioskConfig
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button
+            class="nav-link"
+            id="combosConfig-tab"
+            data-bs-toggle="tab"
+            data-bs-target="#combosConfig"
+            type="button"
+            role="tab"
+            aria-controls="combosConfig"
+            aria-selected="false"
+          >
+            combosConfig
+          </button>
+        </li>
+      </ul>
+      <!-- Tabs Content -->
+      <div class="tab-content" id="configTabsContent">
+        <!-- IikoConfig Tab -->
+        <div
+          class="tab-pane fade show active"
+          id="iikoConfig"
+          role="tabpanel"
+          aria-labelledby="iikoConfig-tab"
+        >
+          <div class="row mt-4">
+            <!-- Left Column: Form Fields -->
+            <div class="col-md-5 form-section">
+              <div class="glass-card">
+                <form id="iikoConfigForm" novalidate>
+                  <div class="mb-4">
+                    <label for="apiLogin" class="form-label">ApiLogin</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="apiLogin"
+                      required
+                    />
+                    <div class="error-message" id="apiLoginError"></div>
+                  </div>
+                  <div class="mb-4">
+                    <label for="externalMenuId" class="form-label"
+                      >ExternalMenuId</label
+                    >
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="externalMenuId"
+                      required
+                    />
+                    <div class="error-message" id="externalMenuIdError"></div>
+                  </div>
+                  <div class="mb-4">
+                    <label for="assetsProfileId" class="form-label"
+                      >AssetsProfileId</label
+                    >
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="assetsProfileId"
+                    />
+                    <div class="error-message" id="assetsProfileIdError"></div>
+                  </div>
+                  <div class="mb-4">
+                    <label for="organizationId" class="form-label"
+                      >OrganizationId</label
+                    >
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="organizationId"
+                      required
+                    />
+                    <div class="error-message" id="organizationIdError"></div>
+                  </div>
+                  <div class="mb-4">
+                    <label for="terminalGroupId" class="form-label"
+                      >TerminalGroupId</label
+                    >
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="terminalGroupId"
+                      required
+                    />
+                    <div class="error-message" id="terminalGroupIdError"></div>
+                  </div>
+                  <div class="mb-4">
+                    <label for="paymentTypeId" class="form-label"
+                      >PaymentTypeId</label
+                    >
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="paymentTypeId"
+                      required
+                    />
+                    <div class="error-message" id="paymentTypeIdError"></div>
+                  </div>
+                  <div class="mb-4">
+                    <label for="tableId" class="form-label">TableId</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="tableId"
+                      required
+                    />
+                    <div class="error-message" id="tableIdError"></div>
+                  </div>
+                  <div class="mb-4">
+                    <label for="menuPriceCategoryId" class="form-label"
+                      >MenuPriceCategoryId</label
+                    >
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="menuPriceCategoryId"
+                    />
+                    <div
+                      class="error-message"
+                      id="menuPriceCategoryIdError"
+                    ></div>
+                  </div>
+                  <div class="mb-4">
+                    <label for="tabName" class="form-label">TabName</label>
+                    <input type="text" class="form-control" id="tabName" />
+                    <div class="error-message" id="tabNameError"></div>
+                  </div>
+                  <div class="mb-4">
+                    <label class="form-label">Типы заказов</label>
+                    <div id="iikoOrderTypesContainer">
+                      <!-- Dynamic OrderTypes will be inserted here -->
+                    </div>
+                    <button
+                      type="button"
+                      class="btn btn-primary add-item-btn mt-2"
+                      id="addIikoOrderType"
+                    >
+                      <i class="bi bi-plus-circle"></i> Добавить OrderType
+                    </button>
+                    <div class="error-message" id="orderTypesError"></div>
+                  </div>
+                  <!-- Toggle Switches -->
+                  <div
+                    class="mb-4 d-flex justify-content-between align-items-center"
+                  >
+                    <span class="form-label">Использовать комбо блюда</span>
+                    <div class="form-check form-switch">
+                      <input
+                        class="form-check-input toggle-switch"
+                        type="checkbox"
+                        id="useCombos"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="mb-4 d-flex justify-content-between align-items-center"
+                  >
+                    <span class="form-label">Отправлять чек на email</span>
+                    <div class="form-check form-switch">
+                      <input
+                        class="form-check-input toggle-switch"
+                        type="checkbox"
+                        id="useEmailForBills"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="mb-4 d-flex justify-content-between align-items-center"
+                  >
+                    <span class="form-label">Отправлять чек по смс</span>
+                    <div class="form-check form-switch">
+                      <input
+                        class="form-check-input toggle-switch"
+                        type="checkbox"
+                        id="usePhoneForBills"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="mb-4 d-flex justify-content-between align-items-center"
+                  >
+                    <span class="form-label">Разрешить оплату наличными</span>
+                    <div class="form-check form-switch">
+                      <input
+                        class="form-check-input toggle-switch"
+                        type="checkbox"
+                        id="enableCashPayment"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="mb-4 d-flex justify-content-between align-items-center"
+                  >
+                    <span class="form-label"
+                      >Закрывать заказы при оплате картой</span
+                    >
+                    <div class="form-check form-switch">
+                      <input
+                        class="form-check-input toggle-switch"
+                        type="checkbox"
+                        id="closeOrdersWhenCardPayment"
+                        checked
+                      />
+                    </div>
+                  </div>
+                  <div class="mb-4">
+                    <label for="iikoServerAddress" class="form-label"
+                      >Адрес iikoServer</label
+                    >
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="iikoServerAddress"
+                    />
+                    <div
+                      class="error-message"
+                      id="iikoServerAddressError"
+                    ></div>
+                  </div>
+                  <div class="mb-4">
+                    <label for="iikoServerLogin" class="form-label"
+                      >Логин iikoServer</label
+                    >
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="iikoServerLogin"
+                    />
+                    <div class="error-message" id="iikoServerLoginError"></div>
+                  </div>
+                  <div class="mb-4">
+                    <label for="iikoServerPassword" class="form-label"
+                      >Пароль iikoServer</label
+                    >
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="iikoServerPassword"
+                    />
+                    <div
+                      class="error-message"
+                      id="iikoServerPasswordError"
+                    ></div>
+                  </div>
+                  <div class="mb-4">
+                    <label class="form-label">Отображаемые комбо</label>
+                    <div id="comboOperationalPeriodsContainer">
+                      <!-- Dynamic ComboOperationalPeriods will be inserted here -->
+                    </div>
+                    <button
+                      type="button"
+                      class="btn btn-primary add-item-btn mt-2"
+                      id="addComboOperationalPeriod"
+                    >
+                      <i class="bi bi-plus-circle"></i> Добавить комбо
+                    </button>
+                    <div
+                      class="error-message"
+                      id="comboOperationalPeriodsError"
+                    ></div>
+                  </div>
+                </form>
+              </div>
+            </div>
+            <!-- Right Column: JSON Output -->
+            <div class="col-md-7">
+              <div class="glass-card json-container">
+                <div class="mb-2 d-flex justify-content-end">
+                  <button class="btn btn-secondary copy-btn" id="copyIikoJson">
+                    Скопировать
+                  </button>
+                </div>
+                <textarea class="json-textarea" id="iikoJson"></textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- KioskConfig Tab -->
+        <div
+          class="tab-pane fade"
+          id="kioskConfig"
+          role="tabpanel"
+          aria-labelledby="kioskConfig-tab"
+        >
+          <div class="row mt-4">
+            <!-- Left Column: Form Fields -->
+            <div class="col-md-5 form-section">
+              <div class="glass-card">
+                <form id="kioskConfigForm" novalidate>
+                  <div class="mb-4">
+                    <label for="loggerId" class="form-label">Logger ID</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="loggerId"
+                      required
+                    />
+                    <div class="error-message" id="loggerIdError"></div>
+                  </div>
+                  <div class="mb-4">
+                    <label for="threadId" class="form-label">ThreadId</label>
+                    <input
+                      type="number"
+                      class="form-control"
+                      id="threadId"
+                      min="1"
+                    />
+                    <div class="error-message" id="threadIdError"></div>
+                  </div>
+                  <div class="mb-4">
+                    <label for="key" class="form-label"
+                      >Пароль от сервисного меню</label
+                    >
+                    <input type="text" class="form-control" id="key" required />
+                    <div class="error-message" id="keyError"></div>
+                  </div>
+                  <div class="mb-4">
+                    <label for="acquiring" class="form-label">Эквайринг</label>
+                    <select class="form-select" id="acquiring" required>
+                      <option value=""></option>
+                      <option value="Inpas">Inpas</option>
+                      <option value="Sberbank">Sberbank</option>
+                    </select>
+                    <div class="error-message" id="acquiringError"></div>
+                  </div>
+                  <!-- InpasTerminalId Container -->
+                  <div
+                    class="mb-4"
+                    id="inpasTerminalIdContainer"
+                    style="display: none"
+                  >
+                    <label for="inpasTerminalId" class="form-label"
+                      >Inpas Terminal ID</label
+                    >
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="inpasTerminalId"
+                    />
+                    <div class="error-message" id="inpasTerminalIdError"></div>
+                  </div>
+                  <div
+                    class="mb-4 d-flex justify-content-between align-items-center"
+                  >
+                    <span>Использовать принтер</span>
+                    <div class="form-check form-switch">
+                      <input
+                        class="form-check-input toggle-switch"
+                        type="checkbox"
+                        id="usePrinter"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="mb-4 d-flex justify-content-between align-items-center"
+                  >
+                    <span>Печатать банковский слип</span>
+                    <div class="form-check form-switch">
+                      <input
+                        class="form-check-input toggle-switch"
+                        type="checkbox"
+                        id="printPaymentReceipt"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="mb-4 d-flex justify-content-between align-items-center"
+                  >
+                    <span>Печатать номер заказа</span>
+                    <div class="form-check form-switch">
+                      <input
+                        class="form-check-input toggle-switch"
+                        type="checkbox"
+                        id="printOrderNumber"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="mb-4 d-flex justify-content-between align-items-center"
+                  >
+                    <span>Использовать сканер для карт лояльности</span>
+                    <div class="form-check form-switch">
+                      <input
+                        class="form-check-input toggle-switch"
+                        type="checkbox"
+                        id="useScannerForLoyaltyCards"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="mb-4 d-flex justify-content-between align-items-center"
+                  >
+                    <span>Использовать сканер для товаров с штрих кодом</span>
+                    <div class="form-check form-switch">
+                      <input
+                        class="form-check-input toggle-switch"
+                        type="checkbox"
+                        id="useScannerForBarcodeProducts"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="mb-4"
+                    id="scannerComPortContainer"
+                    style="display: none"
+                  >
+                    <label for="scannerComPort" class="form-label"
+                      >Scanner Com Port</label
+                    >
+                    <input
+                      type="number"
+                      class="form-control"
+                      id="scannerComPort"
+                      min="1"
+                    />
+                    <div class="error-message" id="scannerComPortError"></div>
+                  </div>
+                  <div class="mb-4">
+                    <label for="nutritionDisplayType" class="form-label"
+                      >Отображение КБЖУ</label
+                    >
+                    <select class="form-select" id="nutritionDisplayType">
+                      <option value="">Не отображать</option>
+                      <option value="100g">На 100 грамм</option>
+                      <option value="portion">На порцию</option>
+                    </select>
+                    <div
+                      class="error-message"
+                      id="nutritionDisplayTypeError"
+                    ></div>
+                  </div>
+                  <div
+                    class="mb-4 d-flex justify-content-between align-items-center"
+                  >
+                    <span>Сортировать модификаторы в алфавитном порядке</span>
+                    <div class="form-check form-switch">
+                      <input
+                        class="form-check-input toggle-switch"
+                        type="checkbox"
+                        id="sortModifiersInAlphabeticalOrder"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="mb-4 d-flex justify-content-between align-items-center"
+                  >
+                    <span
+                      >Отображать названия модификаторов заглавными
+                      буквами</span
+                    >
+                    <div class="form-check form-switch">
+                      <input
+                        class="form-check-input toggle-switch"
+                        type="checkbox"
+                        id="enableAllCapsForModifierNames"
+                      />
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+            <!-- Right Column: JSON Output -->
+            <div class="col-md-7">
+              <div class="glass-card json-container">
+                <div class="mb-2 d-flex justify-content-end">
+                  <button class="btn btn-secondary copy-btn" id="copyKioskJson">
+                    Скопировать
+                  </button>
+                </div>
+                <textarea class="json-textarea" id="kioskJson"></textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- CombosConfig Tab -->
+        <div
+          class="tab-pane fade"
+          id="combosConfig"
+          role="tabpanel"
+          aria-labelledby="combosConfig-tab"
+        >
+          <div class="row mt-4">
+            <!-- CombosConfig Form -->
+            <div class="col-md-5 form-section">
+              <div class="glass-card">
+                <form id="combosConfigForm" novalidate>
+                  <div class="mb-4">
+                    <label class="form-label">Отображаемые комбо</label>
+                    <div id="combosContainer">
+                      <!-- Dynamic ComboOperationalPeriods for CombosConfig will be inserted here -->
+                    </div>
+                    <button
+                      type="button"
+                      class="btn btn-primary add-item-btn mt-2"
+                      id="addCombo"
+                    >
+                      <i class="bi bi-plus-circle"></i> Добавить комбо
+                    </button>
+                    <div class="error-message" id="combosError"></div>
+                  </div>
+                </form>
+              </div>
+            </div>
+
+            <!-- CombosConfig JSON Output -->
+            <div class="col-md-7">
+              <div class="glass-card json-container">
+                <div class="mb-2 d-flex justify-content-end">
+                  <button
+                    class="btn btn-secondary copy-btn"
+                    id="copyCombosJson"
+                  >
+                    Скопировать
+                  </button>
+                </div>
+                <textarea class="json-textarea" id="combosJson"></textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bootstrap 5 JS Bundle (includes Popper) -->
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+      <script>
+        // ---------------------- IikoConfig Handling ----------------------
+
+        const iikoConfigForm = document.getElementById("iikoConfigForm");
+        const iikoJsonTextarea = document.getElementById("iikoJson");
+        const copyIikoJsonBtn = document.getElementById("copyIikoJson");
+
+        // Form Fields
+        const apiLoginInput = document.getElementById("apiLogin");
+        const externalMenuIdInput = document.getElementById("externalMenuId");
+        const assetsProfileIdInput = document.getElementById("assetsProfileId");
+        const terminalGroupIdInput = document.getElementById("terminalGroupId");
+        const organizationIdInput = document.getElementById("organizationId");
+        const paymentTypeIdInput = document.getElementById("paymentTypeId");
+        const menuPriceCategoryIdInput = document.getElementById(
+          "menuPriceCategoryId"
+        );
+        const tableIdInput = document.getElementById("tableId");
+        const tabNameInput = document.getElementById("tabName");
+        const useCombosCheckbox = document.getElementById("useCombos");
+        const useEmailForBillsCheckbox =
+          document.getElementById("useEmailForBills");
+        const usePhoneForBillsCheckbox =
+          document.getElementById("usePhoneForBills");
+        const enableCashPaymentCheckbox =
+          document.getElementById("enableCashPayment");
+        const closeOrdersWhenCardPaymentCheckbox = document.getElementById(
+          "closeOrdersWhenCardPayment"
+        );
+        const iikoServerAddressInput =
+          document.getElementById("iikoServerAddress");
+        const iikoServerLoginInput = document.getElementById("iikoServerLogin");
+        const iikoServerPasswordInput =
+          document.getElementById("iikoServerPassword");
+
+        // Error Message Elements
+        const apiLoginError = document.getElementById("apiLoginError");
+        const externalMenuIdError = document.getElementById(
+          "externalMenuIdError"
+        );
+        const assetsProfileIdError = document.getElementById(
+          "assetsProfileIdError"
+        );
+        const terminalGroupIdError = document.getElementById(
+          "terminalGroupIdError"
+        );
+        const organizationIdError = document.getElementById(
+          "organizationIdError"
+        );
+        const paymentTypeIdError =
+          document.getElementById("paymentTypeIdError");
+        const menuPriceCategoryIdError = document.getElementById(
+          "menuPriceCategoryIdError"
+        );
+        const tableIdError = document.getElementById("tableIdError");
+        const tabNameError = document.getElementById("tabNameError");
+        const orderTypesError = document.getElementById("orderTypesError");
+        // Removed general ComboOperationalPeriods error message
+        // const comboOperationalPeriodsError = document.getElementById('comboOperationalPeriodsError');
+
+        // Dynamic Lists Containers
+        const iikoOrderTypesContainer = document.getElementById(
+          "iikoOrderTypesContainer"
+        );
+        const addIikoOrderTypeBtn = document.getElementById("addIikoOrderType");
+        const comboOperationalPeriodsContainer = document.getElementById(
+          "comboOperationalPeriodsContainer"
+        );
+        const addComboOperationalPeriodBtn = document.getElementById(
+          "addComboOperationalPeriod"
+        );
+
+        // Initialize IikoConfig object
+        let iikoConfig = {
+          ApiLogin: "",
+          ExternalMenuId: "",
+          AssetsProfileId: "",
+          OrganizationId: "",
+          TerminalGroupId: "",
+          PaymentTypeId: "",
+          TableId: "",
+          MenuPriceCategoryId: "",
+          TabName: "",
+          OrderTypes: [],
+          UseCombos: false,
+          UseEmailForBills: false,
+          UsePhoneForBills: false,
+          EnableCashPayment: false,
+          CloseOrdersWhenCardPayment: true,
+          IikoServerAddress: "",
+          IikoServerLogin: "",
+          IikoServerPassword: "",
+          ComboOperationalPeriods: [],
+        };
+
+        // Helper Functions
+        function isValidGUID(guid) {
+          const guidRegex =
+            /^(00000000-0000-0000-0000-000000000000|[0-9a-f]{8}-[0-9a-f]{4}-[1-9a-f][0-9a-f]{3}-[0-9a-f]{4}-[0-9a-f]{12})$/i;
+          return guidRegex.test(guid.trim());
+        }
+
+        function validateIikoConfig() {
+          let isValid = true;
+
+          // ApiLogin
+          if (!iikoConfig.ApiLogin.trim()) {
+            apiLoginError.textContent = "Поле не заполнено.";
+            apiLoginInput.classList.add("is-invalid");
+            apiLoginInput.classList.remove("is-valid");
+            isValid = false;
+          } else {
+            apiLoginError.textContent = "";
+            apiLoginInput.classList.remove("is-invalid");
+            apiLoginInput.classList.add("is-valid");
+          }
+
+          // ExternalMenuId
+          if (!iikoConfig.ExternalMenuId.trim()) {
+            externalMenuIdError.textContent = "Поле не заполнено.";
+            externalMenuIdInput.classList.add("is-invalid");
+            externalMenuIdInput.classList.remove("is-valid");
+            isValid = false;
+          } else {
+            externalMenuIdError.textContent = "";
+            externalMenuIdInput.classList.remove("is-invalid");
+            externalMenuIdInput.classList.add("is-valid");
+          }
+
+          // TerminalGroupId
+          if (!iikoConfig.TerminalGroupId.trim()) {
+            terminalGroupIdError.textContent = "Поле не заполнено.";
+            terminalGroupIdInput.classList.add("is-invalid");
+            terminalGroupIdInput.classList.remove("is-valid");
+            isValid = false;
+          } else if (!isValidGUID(iikoConfig.TerminalGroupId)) {
+            terminalGroupIdError.textContent = "Неверный формат.";
+            terminalGroupIdInput.classList.add("is-invalid");
+            terminalGroupIdInput.classList.remove("is-valid");
+            isValid = false;
+          } else {
+            terminalGroupIdError.textContent = "";
+            terminalGroupIdInput.classList.remove("is-invalid");
+            terminalGroupIdInput.classList.add("is-valid");
+          }
+
+          // OrganizationId
+          if (!iikoConfig.OrganizationId.trim()) {
+            organizationIdError.textContent = "Поле не заполнено.";
+            organizationIdInput.classList.add("is-invalid");
+            organizationIdInput.classList.remove("is-valid");
+            isValid = false;
+          } else if (!isValidGUID(iikoConfig.OrganizationId)) {
+            organizationIdError.textContent = "Неверный формат.";
+            organizationIdInput.classList.add("is-invalid");
+            organizationIdInput.classList.remove("is-valid");
+            isValid = false;
+          } else {
+            organizationIdError.textContent = "";
+            organizationIdInput.classList.remove("is-invalid");
+            organizationIdInput.classList.add("is-valid");
+          }
+
+          // PaymentTypeId
+          if (!iikoConfig.PaymentTypeId.trim()) {
+            paymentTypeIdError.textContent = "Поле не заполнено.";
+            paymentTypeIdInput.classList.add("is-invalid");
+            paymentTypeIdInput.classList.remove("is-valid");
+            isValid = false;
+          } else if (!isValidGUID(iikoConfig.PaymentTypeId)) {
+            paymentTypeIdError.textContent = "Неверный формат.";
+            paymentTypeIdInput.classList.add("is-invalid");
+            paymentTypeIdInput.classList.remove("is-valid");
+            isValid = false;
+          } else {
+            paymentTypeIdError.textContent = "";
+            paymentTypeIdInput.classList.remove("is-invalid");
+            paymentTypeIdInput.classList.add("is-valid");
+          }
+
+          // MenuPriceCategoryId (optional)
+          if (
+            iikoConfig.MenuPriceCategoryId.trim() &&
+            !isValidGUID(iikoConfig.MenuPriceCategoryId)
+          ) {
+            menuPriceCategoryIdError.textContent = "Неверный формат.";
+            menuPriceCategoryIdInput.classList.add("is-invalid");
+            menuPriceCategoryIdInput.classList.remove("is-valid");
+            isValid = false;
+          } else {
+            menuPriceCategoryIdError.textContent = "";
+            menuPriceCategoryIdInput.classList.remove("is-invalid");
+            // Do not add 'is-valid' for optional fields
+          }
+
+          // TableId
+          if (!iikoConfig.TableId.trim()) {
+            tableIdError.textContent = "Поле не заполнено.";
+            tableIdInput.classList.add("is-invalid");
+            tableIdInput.classList.remove("is-valid");
+            isValid = false;
+          } else if (!isValidGUID(iikoConfig.TableId)) {
+            tableIdError.textContent = "Неверный формат.";
+            tableIdInput.classList.add("is-invalid");
+            tableIdInput.classList.remove("is-valid");
+            isValid = false;
+          } else {
+            tableIdError.textContent = "";
+            tableIdInput.classList.remove("is-invalid");
+            tableIdInput.classList.add("is-valid");
+          }
+
+          // TabName (optional)
+          if (
+            tabNameInput.hasAttribute("required") &&
+            !iikoConfig.TabName.trim()
+          ) {
+            tabNameError.textContent = "Поле не заполнено.";
+            tabNameInput.classList.add("is-invalid");
+            tabNameInput.classList.remove("is-valid");
+            isValid = false;
+          } else if (iikoConfig.TabName.trim()) {
+            tabNameError.textContent = "";
+            if (tabNameInput.hasAttribute("required")) {
+              tabNameInput.classList.remove("is-invalid");
+              tabNameInput.classList.add("is-valid");
+            } else {
+              tabNameInput.classList.remove("is-invalid");
+              tabNameInput.classList.remove("is-valid");
+            }
+          } else {
+            tabNameError.textContent = "";
+            tabNameInput.classList.remove("is-invalid");
+            tabNameInput.classList.remove("is-valid");
+          }
+
+          // OrderTypes
+          if (iikoConfig.OrderTypes.length === 0) {
+            orderTypesError.textContent = "Поле не заполнено.";
+            isValid = false;
+          } else {
+            orderTypesError.textContent = "";
+            // If more than one, ensure all OrderTypeNames are filled
+            if (iikoConfig.OrderTypes.length > 1) {
+              const hasEmptyName = iikoConfig.OrderTypes.some(
+                (ot) => !ot.OrderTypeName.trim()
+              );
+              if (hasEmptyName) {
+                orderTypesError.textContent =
+                  "При наличии более двух типов заказов, имена обязательны для всех.";
+                isValid = false;
+              } else {
+                orderTypesError.textContent = "";
+              }
+            }
+          }
+
+          // Each OrderType's OrderTypeId must be filled and valid
+          iikoConfig.OrderTypes.forEach((ot, index) => {
+            const orderTypeIdError = document.getElementById(
+              `orderTypeIdError-${index}`
+            );
+            const orderTypeIdInput = document.getElementById(
+              `orderTypeId-${index}`
+            );
+            if (!ot.OrderTypeId.trim()) {
+              orderTypeIdError.textContent = "Поле не заполнено.";
+              orderTypeIdInput.classList.add("is-invalid");
+              orderTypeIdInput.classList.remove("is-valid");
+              isValid = false;
+            } else if (!isValidGUID(ot.OrderTypeId)) {
+              orderTypeIdError.textContent = "Неверный формат.";
+              orderTypeIdInput.classList.add("is-invalid");
+              orderTypeIdInput.classList.remove("is-valid");
+              isValid = false;
+            } else {
+              orderTypeIdError.textContent = "";
+              orderTypeIdInput.classList.remove("is-invalid");
+              if (orderTypeIdInput.hasAttribute("required")) {
+                orderTypeIdInput.classList.add("is-valid");
+              }
+            }
+
+            // If more than one, OrderTypeName must not be empty
+            if (iikoConfig.OrderTypes.length > 1) {
+              const orderTypeNameError = document.getElementById(
+                `orderTypeNameError-${index}`
+              );
+              const orderTypeNameInput = document.getElementById(
+                `orderTypeName-${index}`
+              );
+              if (!ot.OrderTypeName.trim()) {
+                orderTypeNameError.textContent = "Поле не заполнено.";
+                orderTypeNameInput.classList.add("is-invalid");
+                orderTypeNameInput.classList.remove("is-valid");
+                isValid = false;
+              } else {
+                orderTypeNameError.textContent = "";
+                orderTypeNameInput.classList.remove("is-invalid");
+                if (orderTypeNameInput.hasAttribute("required")) {
+                  orderTypeNameInput.classList.add("is-valid");
+                }
+              }
+            }
+          });
+
+          // ComboOperationalPeriods
+          iikoConfig.ComboOperationalPeriods.forEach((period, index) => {
+            const comboPeriodNameError = document.getElementById(
+              `comboPeriodNameError-${index}`
+            );
+            const comboPeriodNameInput = document.getElementById(
+              `comboPeriodName-${index}`
+            );
+            const comboPeriodTimeRangeError = document.getElementById(
+              `comboPeriodTimeRangeError-${index}`
+            );
+            const comboPeriodTimeRangeInput = document.getElementById(
+              `comboPeriodTimeRange-${index}`
+            );
+
+            // Validate Name
+            if (!period.Name.trim()) {
+              comboPeriodNameError.textContent = "Поле не заполнено.";
+              comboPeriodNameInput.classList.add("is-invalid");
+              comboPeriodNameInput.classList.remove("is-valid");
+              isValid = false;
+            } else {
+              comboPeriodNameError.textContent = "";
+              comboPeriodNameInput.classList.remove("is-invalid");
+              comboPeriodNameInput.classList.add("is-valid");
+            }
+
+            // Validate TimeRange (can be empty or in the format HH:MM-HH:MM)
+            const timeRangeRegex =
+              /^([01]\d|2[0-3]):([0-5]\d)-([01]\d|2[0-3]):([0-5]\d)$/;
+            const timeRangeValue = period.TimeRange.trim();
+
+            if (timeRangeValue && !timeRangeRegex.test(timeRangeValue)) {
+              comboPeriodTimeRangeError.textContent =
+                "Неверный формат. Используйте формат '00:00-00:00'.";
+              comboPeriodTimeRangeInput.classList.add("is-invalid");
+              comboPeriodTimeRangeInput.classList.remove("is-valid");
+              isValid = false;
+            } else {
+              comboPeriodTimeRangeError.textContent = "";
+              comboPeriodTimeRangeInput.classList.remove("is-invalid");
+
+              // Only add 'is-valid' class if TimeRange is not empty and valid
+              if (timeRangeValue) {
+                comboPeriodTimeRangeInput.classList.add("is-valid");
+              } else {
+                // Remove 'is-valid' class if the field is empty
+                comboPeriodTimeRangeInput.classList.remove("is-valid");
+              }
+            }
+          });
+
+          return isValid;
+        }
+
+        function updateIikoJson() {
+          iikoJsonTextarea.value = JSON.stringify(iikoConfig, null, 4);
+        }
+
+        // Event Listeners for IikoConfig Form Fields
+        apiLoginInput.addEventListener("input", (e) => {
+          iikoConfig.ApiLogin = e.target.value;
+          validateIikoConfig();
+          updateIikoJson();
+        });
+
+        externalMenuIdInput.addEventListener("input", (e) => {
+          iikoConfig.ExternalMenuId = e.target.value;
+          validateIikoConfig();
+          updateIikoJson();
+        });
+
+        assetsProfileIdInput.addEventListener("input", (e) => {
+          iikoConfig.AssetsProfileId = e.target.value;
+          validateIikoConfig();
+          updateIikoJson();
+        });
+
+        terminalGroupIdInput.addEventListener("input", (e) => {
+          iikoConfig.TerminalGroupId = e.target.value;
+          validateIikoConfig();
+          updateIikoJson();
+        });
+
+        organizationIdInput.addEventListener("input", (e) => {
+          iikoConfig.OrganizationId = e.target.value;
+          validateIikoConfig();
+          updateIikoJson();
+        });
+
+        paymentTypeIdInput.addEventListener("input", (e) => {
+          iikoConfig.PaymentTypeId = e.target.value;
+          validateIikoConfig();
+          updateIikoJson();
+        });
+
+        menuPriceCategoryIdInput.addEventListener("input", (e) => {
+          iikoConfig.MenuPriceCategoryId = e.target.value;
+          validateIikoConfig();
+          updateIikoJson();
+        });
+
+        tableIdInput.addEventListener("input", (e) => {
+          iikoConfig.TableId = e.target.value;
+          validateIikoConfig();
+          updateIikoJson();
+        });
+
+        tabNameInput.addEventListener("input", (e) => {
+          iikoConfig.TabName = e.target.value;
+          validateIikoConfig();
+          updateIikoJson();
+        });
+
+        useCombosCheckbox.addEventListener("change", (e) => {
+          iikoConfig.UseCombos = e.target.checked;
+          updateIikoJson();
+        });
+
+        useEmailForBillsCheckbox.addEventListener("change", (e) => {
+          iikoConfig.UseEmailForBills = e.target.checked;
+          updateIikoJson();
+        });
+
+        usePhoneForBillsCheckbox.addEventListener("change", (e) => {
+          iikoConfig.UsePhoneForBills = e.target.checked;
+          updateIikoJson();
+        });
+
+        enableCashPaymentCheckbox.addEventListener("change", (e) => {
+          iikoConfig.EnableCashPayment = e.target.checked;
+          updateIikoJson();
+        });
+
+        closeOrdersWhenCardPaymentCheckbox.addEventListener("change", (e) => {
+          iikoConfig.CloseOrdersWhenCardPayment = e.target.checked;
+          updateIikoJson();
+        });
+
+        iikoServerAddressInput.addEventListener("input", (e) => {
+          iikoConfig.IikoServerAddress = e.target.value;
+          validateIikoConfig();
+          updateIikoJson();
+        });
+
+        iikoServerLoginInput.addEventListener("input", (e) => {
+          iikoConfig.IikoServerLogin = e.target.value;
+          validateIikoConfig();
+          updateIikoJson();
+        });
+
+        iikoServerPasswordInput.addEventListener("input", (e) => {
+          iikoConfig.IikoServerPassword = e.target.value;
+          validateIikoConfig();
+          updateIikoJson();
+        });
+
+        // ---------------------- OrderTypes Handling ----------------------
+
+        // Initialize with one OrderType
+        function addIikoOrderType(
+          orderType = { OrderTypeId: "", OrderTypeName: "" }
+        ) {
+          iikoConfig.OrderTypes.push(orderType);
+          renderIikoOrderTypes();
+          validateIikoConfig();
+          updateIikoJson();
+        }
+
+        function renderIikoOrderTypes() {
+          iikoOrderTypesContainer.innerHTML = "";
+          iikoConfig.OrderTypes.forEach((ot, index) => {
+            const otDiv = document.createElement("div");
+            otDiv.classList.add(
+              "mb-3",
+              "border",
+              "p-3",
+              "rounded",
+              "dynamic-list-item"
+            );
+
+            // OrderTypeId
+            const otIdLabel = document.createElement("label");
+            otIdLabel.classList.add("form-label");
+            otIdLabel.textContent = "OrderTypeId";
+            otIdLabel.setAttribute("for", `orderTypeId-${index}`);
+
+            const otIdInput = document.createElement("input");
+            otIdInput.type = "text";
+            otIdInput.classList.add("form-control");
+            otIdInput.id = `orderTypeId-${index}`;
+            otIdInput.value = ot.OrderTypeId;
+            otIdInput.required = true;
+
+            otIdInput.addEventListener("input", (e) => {
+              iikoConfig.OrderTypes[index].OrderTypeId = e.target.value;
+              validateIikoConfig();
+              updateIikoJson();
+            });
+
+            const otIdError = document.createElement("div");
+            otIdError.classList.add("error-message");
+            otIdError.id = `orderTypeIdError-${index}`;
+
+            // OrderTypeName
+            const otNameLabel = document.createElement("label");
+            otNameLabel.classList.add("form-label");
+            otNameLabel.textContent = "OrderTypeName";
+            otNameLabel.setAttribute("for", `orderTypeName-${index}`);
+
+            const otNameInput = document.createElement("input");
+            otNameInput.type = "text";
+            otNameInput.classList.add("form-control");
+            otNameInput.id = `orderTypeName-${index}`;
+            otNameInput.value = ot.OrderTypeName;
+            // Determine if the field should be required based on the total number of OrderTypes
+            otNameInput.required = iikoConfig.OrderTypes.length > 1;
+
+            otNameInput.addEventListener("input", (e) => {
+              iikoConfig.OrderTypes[index].OrderTypeName = e.target.value;
+              validateIikoConfig();
+              updateIikoJson();
+            });
+
+            const otNameError = document.createElement("div");
+            otNameError.classList.add("error-message");
+            otNameError.id = `orderTypeNameError-${index}`;
+
+            // Remove Button
+            const removeBtn = document.createElement("button");
+            removeBtn.type = "button";
+            removeBtn.classList.add("remove-item-btn", "btn", "btn-link");
+            removeBtn.innerHTML = '<i class="bi bi-trash"></i>';
+            removeBtn.title = "Удалить OrderType";
+            removeBtn.addEventListener("click", () => {
+              iikoConfig.OrderTypes.splice(index, 1);
+              renderIikoOrderTypes();
+              validateIikoConfig();
+              updateIikoJson();
+            });
+
+            otDiv.appendChild(otIdLabel);
+            otDiv.appendChild(otIdInput);
+            otDiv.appendChild(otIdError);
+            otDiv.appendChild(otNameLabel);
+            otDiv.appendChild(otNameInput);
+            otDiv.appendChild(otNameError);
+            otDiv.appendChild(removeBtn);
+
+            iikoOrderTypesContainer.appendChild(otDiv);
+          });
+        }
+
+        addIikoOrderTypeBtn.addEventListener("click", () => {
+          addIikoOrderType();
+        });
+
+        // ---------------------- ComboOperationalPeriods Handling ----------------------
+
+        // Initialize with zero ComboOperationalPeriods by default
+        // Commented out the initial add to allow zero periods
+        // addComboOperationalPeriod();
+
+        function addComboOperationalPeriod(
+          period = { Name: "", TimeRange: "" }
+        ) {
+          iikoConfig.ComboOperationalPeriods.push(period);
+          renderComboOperationalPeriods();
+          validateIikoConfig();
+          updateIikoJson();
+        }
+
+        function renderComboOperationalPeriods() {
+          comboOperationalPeriodsContainer.innerHTML = "";
+          iikoConfig.ComboOperationalPeriods.forEach((period, index) => {
+            const periodDiv = document.createElement("div");
+            periodDiv.classList.add(
+              "mb-3",
+              "border",
+              "p-3",
+              "rounded",
+              "dynamic-list-item"
+            );
+
+            // Name
+            const nameLabel = document.createElement("label");
+            nameLabel.classList.add("form-label");
+            nameLabel.textContent = "Название комбо";
+            nameLabel.setAttribute("for", `comboPeriodName-${index}`);
+
+            const nameInput = document.createElement("input");
+            nameInput.type = "text";
+            nameInput.classList.add("form-control");
+            nameInput.id = `comboPeriodName-${index}`;
+            nameInput.value = period.Name;
+            nameInput.required = true;
+
+            nameInput.addEventListener("input", (e) => {
+              iikoConfig.ComboOperationalPeriods[index].Name = e.target.value;
+              validateIikoConfig();
+              updateIikoJson();
+            });
+
+            const nameError = document.createElement("div");
+            nameError.classList.add("error-message");
+            nameError.id = `comboPeriodNameError-${index}`;
+
+            // TimeRange
+            const timeRangeLabel = document.createElement("label");
+            timeRangeLabel.classList.add("form-label");
+            timeRangeLabel.textContent =
+              "Время действия (оставить пустым, если ограничений нет)";
+            timeRangeLabel.setAttribute("for", `comboPeriodTimeRange-${index}`);
+
+            const timeRangeInput = document.createElement("input");
+            timeRangeInput.type = "text";
+            timeRangeInput.classList.add("form-control");
+            timeRangeInput.id = `comboPeriodTimeRange-${index}`;
+            timeRangeInput.value = period.TimeRange;
+            timeRangeInput.required = false; // TimeRange is optional
+
+            timeRangeInput.addEventListener("input", (e) => {
+              iikoConfig.ComboOperationalPeriods[index].TimeRange =
+                e.target.value;
+              validateIikoConfig();
+              updateIikoJson();
+            });
+
+            const timeRangeError = document.createElement("div");
+            timeRangeError.classList.add("error-message");
+            timeRangeError.id = `comboPeriodTimeRangeError-${index}`;
+
+            // Remove Button
+            const removeBtn = document.createElement("button");
+            removeBtn.type = "button";
+            removeBtn.classList.add("remove-item-btn", "btn", "btn-link");
+            removeBtn.innerHTML = '<i class="bi bi-trash"/>';
+            removeBtn.title = "Удалить ComboOperationalPeriod";
+            removeBtn.addEventListener("click", () => {
+              iikoConfig.ComboOperationalPeriods.splice(index, 1);
+              renderComboOperationalPeriods();
+              validateIikoConfig();
+              updateIikoJson();
+            });
+
+            periodDiv.appendChild(nameLabel);
+            periodDiv.appendChild(nameInput);
+            periodDiv.appendChild(nameError);
+            periodDiv.appendChild(timeRangeLabel);
+            periodDiv.appendChild(timeRangeInput);
+            periodDiv.appendChild(timeRangeError);
+            periodDiv.appendChild(removeBtn);
+
+            comboOperationalPeriodsContainer.appendChild(periodDiv);
+          });
+        }
+
+        addComboOperationalPeriodBtn.addEventListener("click", () => {
+          addComboOperationalPeriod();
+        });
+
+        // ---------------------- Initial Setup ----------------------
+
+        // Initialize with one OrderType
+        addIikoOrderType();
+        // Do NOT initialize with ComboOperationalPeriods
+        // User can add as needed
+
+        // Populate form fields with default values
+        function populateIikoForm() {
+          apiLoginInput.value = iikoConfig.ApiLogin;
+          externalMenuIdInput.value = iikoConfig.ExternalMenuId;
+          assetsProfileIdInput.value = iikoConfig.AssetsProfileId;
+          terminalGroupIdInput.value = iikoConfig.TerminalGroupId;
+          organizationIdInput.value = iikoConfig.OrganizationId;
+          paymentTypeIdInput.value = iikoConfig.PaymentTypeId;
+          menuPriceCategoryIdInput.value = iikoConfig.MenuPriceCategoryId;
+          tableIdInput.value = iikoConfig.TableId;
+          tabNameInput.value = iikoConfig.TabName;
+          useCombosCheckbox.checked = iikoConfig.UseCombos;
+          useEmailForBillsCheckbox.checked = iikoConfig.UseEmailForBills;
+          usePhoneForBillsCheckbox.checked = iikoConfig.UsePhoneForBills;
+          enableCashPaymentCheckbox.checked = iikoConfig.EnableCashPayment;
+          closeOrdersWhenCardPaymentCheckbox.checked =
+            iikoConfig.CloseOrdersWhenCardPayment;
+          iikoServerAddressInput.value = iikoConfig.IikoServerAddress;
+          iikoServerLoginInput.value = iikoConfig.IikoServerLogin;
+          iikoServerPasswordInput.value = iikoConfig.IikoServerPassword;
+        }
+
+        populateIikoForm();
+        updateIikoJson();
+        validateIikoConfig();
+
+        // ---------------------- Copy to Clipboard Functionality ----------------------
+
+        copyIikoJsonBtn.addEventListener("click", () => {
+          navigator.clipboard
+            .writeText(iikoJsonTextarea.value)
+            .then(() => {
+              const originalText = copyIikoJsonBtn.textContent;
+              copyIikoJsonBtn.textContent = "Скопировано";
+              setTimeout(() => {
+                copyIikoJsonBtn.textContent = originalText;
+              }, 2000);
+            })
+            .catch((err) => {
+              console.error("Ошибка копирования: ", err);
+            });
+        });
+
+        // ---------------------- Paste JSON to Form Functionality ----------------------
+
+        iikoJsonTextarea.addEventListener("paste", (e) => {
+          e.preventDefault();
+          const pasteData = e.clipboardData.getData("text");
+          try {
+            const parsedData = JSON.parse(pasteData);
+            if (parsedData && typeof parsedData === "object") {
+              // Update iikoConfig with parsed data
+              iikoConfig = { ...iikoConfig, ...parsedData };
+              // Handle dynamic lists
+              if (parsedData.OrderTypes) {
+                iikoConfig.OrderTypes = parsedData.OrderTypes;
+                renderIikoOrderTypes();
+              }
+              if (parsedData.ComboOperationalPeriods) {
+                iikoConfig.ComboOperationalPeriods =
+                  parsedData.ComboOperationalPeriods;
+                renderComboOperationalPeriods();
+              }
+              // Populate form fields
+              populateIikoForm();
+              // Update JSON textarea
+              updateIikoJson();
+              // Validate
+              validateIikoConfig();
+            }
+          } catch (error) {
+            alert("Неверный формат JSON.");
+            console.error("JSON Parse Error:", error);
+          }
+        });
+
+        // ---------------------- End of IikoConfig Handling ----------------------
+
+        // ---------------------- KioskConfig Handling ----------------------
+
+        const kioskConfigForm = document.getElementById("kioskConfigForm");
+        const kioskJsonTextarea = document.getElementById("kioskJson");
+        const copyKioskJsonBtn = document.getElementById("copyKioskJson");
+
+        // Form Fields
+        const loggerIdInput = document.getElementById("loggerId");
+        const threadIdInput = document.getElementById("threadId");
+        const acquiringSelect = document.getElementById("acquiring");
+        const inpasTerminalIdInput = document.getElementById("inpasTerminalId");
+        const inpasTerminalIdContainer = document.getElementById(
+          "inpasTerminalIdContainer"
+        );
+        const usePrinterCheckbox = document.getElementById("usePrinter");
+        const printPaymentReceiptCheckbox = document.getElementById(
+          "printPaymentReceipt"
+        );
+        const printOrderNumberCheckbox =
+          document.getElementById("printOrderNumber");
+        const keyInput = document.getElementById("key");
+        const sortModifiersInAlphabeticalOrderCheckbox =
+          document.getElementById("sortModifiersInAlphabeticalOrder");
+        const enableAllCapsForModifierNamesCheckbox = document.getElementById(
+          "enableAllCapsForModifierNames"
+        );
+        const nutritionDisplayTypeSelect = document.getElementById(
+          "nutritionDisplayType"
+        );
+        const scannerComPortInput = document.getElementById("scannerComPort");
+        const scannerComPortContainer = document.getElementById(
+          "scannerComPortContainer"
+        );
+        const useScannerForLoyaltyCardsCheckbox = document.getElementById(
+          "useScannerForLoyaltyCards"
+        );
+        const useScannerForBarcodeProductsCheckbox = document.getElementById(
+          "useScannerForBarcodeProducts"
+        );
+
+        // Error Message Elements
+        const loggerIdError = document.getElementById("loggerIdError");
+        const threadIdError = document.getElementById("threadIdError");
+        const acquiringError = document.getElementById("acquiringError");
+        const inpasTerminalIdError = document.getElementById(
+          "inpasTerminalIdError"
+        );
+        const keyError = document.getElementById("keyError");
+        const kilogramsMeasureUnitInitialValueError = document.getElementById(
+          "kilogramsMeasureUnitInitialValueError"
+        );
+        const kilogramsMeasureUnitStepError = document.getElementById(
+          "kilogramsMeasureUnitStepError"
+        );
+        const litersMeasureUnitInitialValueError = document.getElementById(
+          "litersMeasureUnitInitialValueError"
+        );
+        const litersMeasureUnitStepError = document.getElementById(
+          "litersMeasureUnitStepError"
+        );
+        const nutritionDisplayTypeError = document.getElementById(
+          "nutritionDisplayTypeError"
+        );
+        const scannerComPortError = document.getElementById(
+          "scannerComPortError"
+        );
+
+        // Initialize KioskConfig object
+        let kioskConfig = {
+          LoggerId: "",
+          ThreadId: null,
+          Key: "",
+          Acquiring: "",
+          InpasTerminalId: "",
+          UsePrinter: false,
+          PrintPaymentReceipt: false,
+          PrintOrderNumber: false,
+          UseScannerForLoyaltyCards: false,
+          UseScannerForBarcodeProducts: false,
+          ScannerComPort: -1,
+          NutritionDisplayType: "",
+          SortModifiersInAlphabeticalOrder: false,
+          EnableAllCapsForModifierNames: false,
+        };
+
+        // Helper Functions
+        function validateKioskConfig() {
+          let isValid = true;
+
+          // LoggerId
+          if (!kioskConfig.LoggerId.trim()) {
+            loggerIdError.textContent = "Поле не заполнено.";
+            loggerIdInput.classList.add("is-invalid");
+            loggerIdInput.classList.remove("is-valid");
+            isValid = false;
+          } else {
+            loggerIdError.textContent = "";
+            loggerIdInput.classList.remove("is-invalid");
+            loggerIdInput.classList.add("is-valid");
+          }
+
+          // ThreadId (optional)
+          // No specific validation as per provided validators
+          threadIdError.textContent = "";
+          threadIdInput.classList.remove("is-invalid");
+          threadIdInput.classList.remove("is-valid");
+
+          // Acquiring
+          if (!kioskConfig.Acquiring.trim()) {
+            acquiringError.textContent = "Выберите эквайринг.";
+            acquiringSelect.classList.add("is-invalid");
+            acquiringSelect.classList.remove("is-valid");
+            isValid = false;
+          } else {
+            acquiringError.textContent = "";
+            acquiringSelect.classList.remove("is-invalid");
+            acquiringSelect.classList.add("is-valid");
+          }
+
+          // InpasTerminalId (required if Acquiring is Inpas)
+          if (kioskConfig.Acquiring === "Inpas") {
+            if (!kioskConfig.InpasTerminalId.trim()) {
+              inpasTerminalIdError.textContent = "Поле не заполнено.";
+              inpasTerminalIdInput.classList.add("is-invalid");
+              inpasTerminalIdInput.classList.remove("is-valid");
+              isValid = false;
+            } else {
+              inpasTerminalIdError.textContent = "";
+              inpasTerminalIdInput.classList.remove("is-invalid");
+              inpasTerminalIdInput.classList.add("is-valid");
+            }
+          } else {
+            inpasTerminalIdError.textContent = "";
+            inpasTerminalIdInput.classList.remove("is-invalid");
+            inpasTerminalIdInput.classList.remove("is-valid");
+          }
+
+          // Key
+          if (!kioskConfig.Key.trim()) {
+            keyError.textContent = "Поле не заполнено.";
+            keyInput.classList.add("is-invalid");
+            keyInput.classList.remove("is-valid");
+            isValid = false;
+          } else {
+            keyError.textContent = "";
+            keyInput.classList.remove("is-invalid");
+            keyInput.classList.add("is-valid");
+          }
+
+          // Nutrition Display Type (optional)
+          // No validation required since it's optional
+          nutritionDisplayTypeError.textContent = "";
+          nutritionDisplayTypeSelect.classList.remove("is-invalid");
+          nutritionDisplayTypeSelect.classList.remove("is-valid");
+
+          // ScannerComPort (required if either scanner switch is true)
+          if (
+            kioskConfig.UseScannerForLoyaltyCards ||
+            kioskConfig.UseScannerForBarcodeProducts
+          ) {
+            if (kioskConfig.ScannerComPort <= 0) {
+              scannerComPortError.textContent =
+                "Значение должно быть больше нуля.";
+              scannerComPortInput.classList.add("is-invalid");
+              scannerComPortInput.classList.remove("is-valid");
+              isValid = false;
+            } else {
+              scannerComPortError.textContent = "";
+              scannerComPortInput.classList.remove("is-invalid");
+              scannerComPortInput.classList.add("is-valid");
+            }
+          } else {
+            scannerComPortError.textContent = "";
+            scannerComPortInput.classList.remove("is-invalid");
+            scannerComPortInput.classList.remove("is-valid");
+          }
+
+          return isValid;
+        }
+
+        function updateKioskJson() {
+          // Create a copy of kioskConfig
+          const jsonConfig = { ...kioskConfig };
+
+          // Remove InpasTerminalId if Acquiring is not 'Inpas'
+          if (jsonConfig.Acquiring !== "Inpas") {
+            delete jsonConfig.InpasTerminalId;
+          }
+
+          // Remove ScannerComPort if neither scanner switch is true
+          if (
+            !jsonConfig.UseScannerForLoyaltyCards &&
+            !jsonConfig.UseScannerForBarcodeProducts
+          ) {
+            delete jsonConfig.ScannerComPort;
+          }
+
+          kioskJsonTextarea.value = JSON.stringify(jsonConfig, null, 4);
+        }
+
+        // Event Listeners for KioskConfig Form Fields
+        loggerIdInput.addEventListener("input", (e) => {
+          kioskConfig.LoggerId = e.target.value;
+          validateKioskConfig();
+          updateKioskJson();
+        });
+
+        threadIdInput.addEventListener("input", (e) => {
+          const value = parseInt(e.target.value, 10);
+          kioskConfig.ThreadId = isNaN(value) ? null : value;
+          validateKioskConfig();
+          updateKioskJson();
+        });
+
+        keyInput.addEventListener("input", (e) => {
+          kioskConfig.Key = e.target.value;
+          validateKioskConfig();
+          updateKioskJson();
+        });
+
+        acquiringSelect.addEventListener("change", (e) => {
+          kioskConfig.Acquiring = e.target.value;
+          // Show or hide InpasTerminalId based on Acquiring value
+          if (kioskConfig.Acquiring === "Inpas") {
+            inpasTerminalIdContainer.style.display = "block";
+          } else {
+            inpasTerminalIdContainer.style.display = "none";
+            kioskConfig.InpasTerminalId = ""; // Clear the value when hidden
+            inpasTerminalIdInput.value = "";
+            inpasTerminalIdError.textContent = "";
+            inpasTerminalIdInput.classList.remove("is-invalid", "is-valid");
+          }
+          validateKioskConfig();
+          updateKioskJson();
+        });
+
+        inpasTerminalIdInput.addEventListener("input", (e) => {
+          kioskConfig.InpasTerminalId = e.target.value;
+          validateKioskConfig();
+          updateKioskJson();
+        });
+
+        usePrinterCheckbox.addEventListener("change", (e) => {
+          kioskConfig.UsePrinter = e.target.checked;
+          updateKioskJson();
+        });
+
+        printPaymentReceiptCheckbox.addEventListener("change", (e) => {
+          kioskConfig.PrintPaymentReceipt = e.target.checked;
+          updateKioskJson();
+        });
+
+        printOrderNumberCheckbox.addEventListener("change", (e) => {
+          kioskConfig.PrintOrderNumber = e.target.checked;
+          updateKioskJson();
+        });
+
+        sortModifiersInAlphabeticalOrderCheckbox.addEventListener(
+          "change",
+          (e) => {
+            kioskConfig.SortModifiersInAlphabeticalOrder = e.target.checked;
+            updateKioskJson();
+          }
+        );
+
+        enableAllCapsForModifierNamesCheckbox.addEventListener(
+          "change",
+          (e) => {
+            kioskConfig.EnableAllCapsForModifierNames = e.target.checked;
+            updateKioskJson();
+          }
+        );
+
+        nutritionDisplayTypeSelect.addEventListener("change", (e) => {
+          kioskConfig.NutritionDisplayType = e.target.value;
+          // Nutrition Display Type is optional; no validation required
+          updateKioskJson();
+        });
+
+        // Event Listeners for Scanner Switches
+        useScannerForLoyaltyCardsCheckbox.addEventListener("change", (e) => {
+          kioskConfig.UseScannerForLoyaltyCards = e.target.checked;
+          toggleScannerComPortVisibility();
+          validateKioskConfig();
+          updateKioskJson();
+        });
+
+        useScannerForBarcodeProductsCheckbox.addEventListener("change", (e) => {
+          kioskConfig.UseScannerForBarcodeProducts = e.target.checked;
+          toggleScannerComPortVisibility();
+          validateKioskConfig();
+          updateKioskJson();
+        });
+
+        function toggleScannerComPortVisibility() {
+          if (
+            kioskConfig.UseScannerForLoyaltyCards ||
+            kioskConfig.UseScannerForBarcodeProducts
+          ) {
+            scannerComPortContainer.style.display = "block";
+          } else {
+            scannerComPortContainer.style.display = "none";
+            kioskConfig.ScannerComPort = -1; // Reset to default when hidden
+            scannerComPortInput.value = "";
+            scannerComPortError.textContent = "";
+            scannerComPortInput.classList.remove("is-invalid", "is-valid");
+          }
+        }
+
+        scannerComPortInput.addEventListener("input", (e) => {
+          const value = parseInt(e.target.value, 10);
+          kioskConfig.ScannerComPort = isNaN(value) ? -1 : value;
+          validateKioskConfig();
+          updateKioskJson();
+        });
+
+        // ---------------------- Initial Setup ----------------------
+
+        // Populate form fields with default values
+        function populateKioskForm() {
+          loggerIdInput.value = kioskConfig.LoggerId;
+          threadIdInput.value =
+            kioskConfig.ThreadId !== null ? kioskConfig.ThreadId : "";
+          keyInput.value = kioskConfig.Key;
+          acquiringSelect.value = kioskConfig.Acquiring;
+          inpasTerminalIdInput.value = kioskConfig.InpasTerminalId;
+          // Show or hide InpasTerminalId based on initial Acquiring value
+          if (kioskConfig.Acquiring === "Inpas") {
+            inpasTerminalIdContainer.style.display = "block";
+          } else {
+            inpasTerminalIdContainer.style.display = "none";
+          }
+          usePrinterCheckbox.checked = kioskConfig.UsePrinter;
+          printPaymentReceiptCheckbox.checked = kioskConfig.PrintPaymentReceipt;
+          printOrderNumberCheckbox.checked = kioskConfig.PrintOrderNumber;
+
+          useScannerForLoyaltyCardsCheckbox.checked =
+            kioskConfig.UseScannerForLoyaltyCards;
+          useScannerForBarcodeProductsCheckbox.checked =
+            kioskConfig.UseScannerForBarcodeProducts;
+          scannerComPortInput.value =
+            kioskConfig.ScannerComPort > 0 ? kioskConfig.ScannerComPort : "";
+          toggleScannerComPortVisibility();
+
+          sortModifiersInAlphabeticalOrderCheckbox.checked =
+            kioskConfig.SortModifiersInAlphabeticalOrder;
+          enableAllCapsForModifierNamesCheckbox.checked =
+            kioskConfig.EnableAllCapsForModifierNames;
+          nutritionDisplayTypeSelect.value = kioskConfig.NutritionDisplayType;
+        }
+
+        populateKioskForm();
+        updateKioskJson();
+        validateKioskConfig();
+
+        // ---------------------- Copy to Clipboard Functionality ----------------------
+
+        copyKioskJsonBtn.addEventListener("click", () => {
+          navigator.clipboard
+            .writeText(kioskJsonTextarea.value)
+            .then(() => {
+              const originalText = copyKioskJsonBtn.textContent;
+              copyKioskJsonBtn.textContent = "Скопировано";
+              setTimeout(() => {
+                copyKioskJsonBtn.textContent = originalText;
+              }, 2000);
+            })
+            .catch((err) => {
+              console.error("Ошибка копирования: ", err);
+            });
+        });
+
+        // ---------------------- Paste JSON to Form Functionality ----------------------
+
+        kioskJsonTextarea.addEventListener("paste", (e) => {
+          e.preventDefault();
+          const pasteData = e.clipboardData.getData("text");
+          try {
+            const parsedData = JSON.parse(pasteData);
+            if (parsedData && typeof parsedData === "object") {
+              // Update kioskConfig with parsed data
+              kioskConfig = { ...kioskConfig, ...parsedData };
+              // Handle Acquiring related fields
+              if (parsedData.Acquiring) {
+                if (parsedData.Acquiring === "Inpas") {
+                  inpasTerminalIdContainer.style.display = "block";
+                } else {
+                  inpasTerminalIdContainer.style.display = "none";
+                  kioskConfig.InpasTerminalId = ""; // Clear if not Inpas
+                }
+              }
+              // Handle Scanner Switches and Scanner Com Port visibility
+              if (
+                "UseScannerForLoyaltyCards" in parsedData ||
+                "UseScannerForBarcodeProducts" in parsedData
+              ) {
+                kioskConfig.UseScannerForLoyaltyCards =
+                  parsedData.UseScannerForLoyaltyCards ||
+                  kioskConfig.UseScannerForLoyaltyCards;
+                kioskConfig.UseScannerForBarcodeProducts =
+                  parsedData.UseScannerForBarcodeProducts ||
+                  kioskConfig.UseScannerForBarcodeProducts;
+                toggleScannerComPortVisibility();
+              }
+              // Populate form fields
+              populateKioskForm();
+              // Update JSON textarea
+              updateKioskJson();
+              // Validate
+              validateKioskConfig();
+            }
+          } catch (error) {
+            alert("Неверный формат JSON.");
+            console.error("JSON Parse Error:", error);
+          }
+        });
+
+        // ---------------------- Initial Setup ----------------------
+
+        // Initialize with default values
+        function initializeKioskConfig() {
+          populateKioskForm();
+          updateKioskJson();
+          validateKioskConfig();
+        }
+
+        initializeKioskConfig();
+
+        // ---------------------- End of KioskConfig Handling ----------------------
+
+        // ---------------------- CombosConfig Handling ----------------------
+
+        const combosContainer = document.getElementById("combosContainer");
+        const addComboBtn = document.getElementById("addCombo");
+        const combosJsonTextarea = document.getElementById("combosJson");
+        const copyCombosJsonBtn = document.getElementById("copyCombosJson");
+
+        let combosConfig = [];
+
+        function validateCombosConfig() {
+          let isValid = true;
+
+          combosConfig.forEach((period, index) => {
+            const comboPeriodNameError = document.getElementById(
+              `comboPeriodNameError-${index}`
+            );
+            const comboPeriodNameInput = document.getElementById(
+              `comboPeriodName-${index}`
+            );
+            const comboPeriodTimeRangeError = document.getElementById(
+              `comboPeriodTimeRangeError-${index}`
+            );
+            const comboPeriodTimeRangeInput = document.getElementById(
+              `comboPeriodTimeRange-${index}`
+            );
+
+            // Validate Name
+            if (!period.Name.trim()) {
+              comboPeriodNameError.textContent = "Поле не заполнено.";
+              comboPeriodNameInput.classList.add("is-invalid");
+              comboPeriodNameInput.classList.remove("is-valid");
+              isValid = false;
+            } else {
+              comboPeriodNameError.textContent = "";
+              comboPeriodNameInput.classList.remove("is-invalid");
+              comboPeriodNameInput.classList.add("is-valid");
+            }
+
+            // Validate TimeRange (can be empty or in the format HH:MM-HH:MM)
+            const timeRangeRegex =
+              /^([01]\d|2[0-3]):([0-5]\d)-([01]\d|2[0-3]):([0-5]\d)$/;
+            const timeRangeValue = period.TimeRange.trim();
+
+            if (timeRangeValue && !timeRangeRegex.test(timeRangeValue)) {
+              comboPeriodTimeRangeError.textContent =
+                "Неверный формат. Используйте формат '00:00-00:00'.";
+              comboPeriodTimeRangeInput.classList.add("is-invalid");
+              comboPeriodTimeRangeInput.classList.remove("is-valid");
+              isValid = false;
+            } else {
+              comboPeriodTimeRangeError.textContent = "";
+              comboPeriodTimeRangeInput.classList.remove("is-invalid");
+
+              if (timeRangeValue) {
+                comboPeriodTimeRangeInput.classList.add("is-valid");
+              } else {
+                comboPeriodTimeRangeInput.classList.remove("is-valid");
+              }
+            }
+          });
+
+          return isValid;
+        }
+
+        function updateCombosJson() {
+          combosJsonTextarea.value = JSON.stringify(combosConfig, null, 4);
+        }
+
+        function addCombo(period = { Name: "", TimeRange: "" }) {
+          combosConfig.push(period);
+          renderCombosConfig();
+          validateCombosConfig();
+          updateCombosJson();
+        }
+
+        function renderCombosConfig() {
+          combosContainer.innerHTML = "";
+          combosConfig.forEach((period, index) => {
+            const periodDiv = document.createElement("div");
+            periodDiv.classList.add(
+              "mb-3",
+              "border",
+              "p-3",
+              "rounded",
+              "dynamic-list-item"
+            );
+
+            // Name
+            const nameLabel = document.createElement("label");
+            nameLabel.classList.add("form-label");
+            nameLabel.textContent = "Название комбо";
+            nameLabel.setAttribute("for", `comboPeriodName-${index}`);
+
+            const nameInput = document.createElement("input");
+            nameInput.type = "text";
+            nameInput.classList.add("form-control");
+            nameInput.id = `comboPeriodName-${index}`;
+            nameInput.value = period.Name;
+            nameInput.required = true;
+
+            nameInput.addEventListener("input", (e) => {
+              combosConfig[index].Name = e.target.value;
+              validateCombosConfig();
+              updateCombosJson();
+            });
+
+            const nameError = document.createElement("div");
+            nameError.classList.add("error-message");
+            nameError.id = `comboPeriodNameError-${index}`;
+
+            // TimeRange
+            const timeRangeLabel = document.createElement("label");
+            timeRangeLabel.classList.add("form-label");
+            timeRangeLabel.textContent =
+              "Время действия (оставить пустым, если ограничений нет)";
+            timeRangeLabel.setAttribute("for", `comboPeriodTimeRange-${index}`);
+
+            const timeRangeInput = document.createElement("input");
+            timeRangeInput.type = "text";
+            timeRangeInput.classList.add("form-control");
+            timeRangeInput.id = `comboPeriodTimeRange-${index}`;
+            timeRangeInput.value = period.TimeRange;
+            timeRangeInput.required = false;
+
+            timeRangeInput.addEventListener("input", (e) => {
+              combosConfig[index].TimeRange = e.target.value;
+              validateCombosConfig();
+              updateCombosJson();
+            });
+
+            const timeRangeError = document.createElement("div");
+            timeRangeError.classList.add("error-message");
+            timeRangeError.id = `comboPeriodTimeRangeError-${index}`;
+
+            // Remove Button
+            const removeBtn = document.createElement("button");
+            removeBtn.type = "button";
+            removeBtn.classList.add("remove-item-btn", "btn", "btn-link");
+            removeBtn.innerHTML = '<i class="bi bi-trash"></i>';
+            removeBtn.title = "Удалить комбо";
+            removeBtn.addEventListener("click", () => {
+              combosConfig.splice(index, 1);
+              renderCombosConfig();
+              validateCombosConfig();
+              updateCombosJson();
+            });
+
+            periodDiv.appendChild(nameLabel);
+            periodDiv.appendChild(nameInput);
+            periodDiv.appendChild(nameError);
+            periodDiv.appendChild(timeRangeLabel);
+            periodDiv.appendChild(timeRangeInput);
+            periodDiv.appendChild(timeRangeError);
+            periodDiv.appendChild(removeBtn);
+
+            combosContainer.appendChild(periodDiv);
+          });
+        }
+
+        addComboBtn.addEventListener("click", () => {
+          addCombo();
+        });
+
+        // Copy Combos JSON to clipboard
+        copyCombosJsonBtn.addEventListener("click", () => {
+          navigator.clipboard
+            .writeText(combosJsonTextarea.value)
+            .then(() => {
+              const originalText = copyCombosJsonBtn.textContent;
+              copyCombosJsonBtn.textContent = "Скопировано";
+              setTimeout(() => {
+                copyCombosJsonBtn.textContent = originalText;
+              }, 2000);
+            })
+            .catch((err) => {
+              console.error("Ошибка копирования: ", err);
+            });
+        });
+
+        // ---------------------- Initial Setup ----------------------
+
+        updateCombosJson();
+        validateCombosConfig();
+      </script>
+    </div>
+  </body>
+</html>
