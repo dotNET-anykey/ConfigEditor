@@ -1938,6 +1938,33 @@
           updateCombosJson();
         }
 
+        function sanitizeCombosConfig(incomingData) {
+          // Ensure the incoming data is an array (as combosConfig is an array)
+          if (!Array.isArray(incomingData)) {
+            return []; // Return an empty array if incoming data is not an array
+          }
+
+          // Define the structure that each combo period should have
+          const defaultComboPeriod = {
+            Name: "",
+            TimeRange: "",
+          };
+
+          // Iterate through the incoming array and sanitize each period
+          const sanitizedCombos = incomingData.map((period) => {
+            // Create a sanitized period object by copying only allowed properties
+            let sanitizedPeriod = {};
+            Object.keys(defaultComboPeriod).forEach((key) => {
+              sanitizedPeriod[key] = period.hasOwnProperty(key)
+                ? period[key]
+                : defaultComboPeriod[key];
+            });
+            return sanitizedPeriod;
+          });
+
+          return sanitizedCombos;
+        }
+
         function renderCombosConfig() {
           combosContainer.innerHTML = "";
           combosConfig.forEach((period, index) => {
@@ -2040,6 +2067,28 @@
             .catch((err) => {
               console.error("Ошибка копирования: ", err);
             });
+        });
+
+        // ---------------------- Paste JSON to Form Functionality ----------------------
+
+        combosJsonTextarea.addEventListener("paste", (e) => {
+          e.preventDefault();
+          const pasteData = e.clipboardData.getData("text");
+          try {
+            const parsedData = JSON.parse(pasteData);
+            if (parsedData && Array.isArray(parsedData)) {
+              // Sanitize the incoming data before assigning it to combosConfig
+              combosConfig = sanitizeCombosConfig(parsedData);
+
+              // Render and update the UI
+              renderCombosConfig();
+              validateCombosConfig();
+              updateCombosJson();
+            }
+          } catch (error) {
+            alert("Неверный формат JSON.");
+            console.error("JSON Parse Error:", error);
+          }
         });
 
         // ---------------------- Initial Setup ----------------------
