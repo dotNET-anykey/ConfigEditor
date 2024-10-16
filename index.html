@@ -1012,6 +1012,25 @@
           return isValid;
         }
 
+        function sanitizeIikoConfig(incomingData) {
+          // Iterate through the properties of iikoConfig and copy over only matching keys
+          const allowedKeys = Object.keys(iikoConfig);
+          let sanitizedConfig = {};
+
+          // Check if any of the keys in incomingData match those in iikoConfig
+          let hasValidKey = false;
+
+          for (const key of allowedKeys) {
+            if (incomingData.hasOwnProperty(key)) {
+              sanitizedConfig[key] = incomingData[key];
+              hasValidKey = true; // Set the flag if at least one valid key is found
+            }
+          }
+
+          // If no valid keys were found, return an empty object
+          return hasValidKey ? sanitizedConfig : {};
+        }
+
         function updateIikoJson() {
           iikoJsonTextarea.value = JSON.stringify(iikoConfig, null, 4);
         }
@@ -1376,23 +1395,30 @@
           try {
             const parsedData = JSON.parse(pasteData);
             if (parsedData && typeof parsedData === "object") {
-              // Update iikoConfig with parsed data
-              iikoConfig = { ...iikoConfig, ...parsedData };
-              // Handle dynamic lists
-              if (parsedData.OrderTypes) {
-                iikoConfig.OrderTypes = parsedData.OrderTypes;
+              // Sanitize the parsed data
+              const sanitizedData = sanitizeIikoConfig(parsedData);
+
+              // Apply the sanitized data to iikoConfig
+              iikoConfig = { ...iikoConfig, ...sanitizedData };
+
+              // Handle dynamic lists if present in sanitized data
+              if (sanitizedData.OrderTypes) {
+                iikoConfig.OrderTypes = sanitizedData.OrderTypes;
                 renderIikoOrderTypes();
               }
-              if (parsedData.ComboOperationalPeriods) {
+              if (sanitizedData.ComboOperationalPeriods) {
                 iikoConfig.ComboOperationalPeriods =
-                  parsedData.ComboOperationalPeriods;
+                  sanitizedData.ComboOperationalPeriods;
                 renderComboOperationalPeriods();
               }
+
               // Populate form fields
               populateIikoForm();
+
               // Update JSON textarea
               updateIikoJson();
-              // Validate
+
+              // Validate the form
               validateIikoConfig();
             }
           } catch (error) {
@@ -1487,6 +1513,22 @@
           SortModifiersInAlphabeticalOrder: false,
           EnableAllCapsForModifierNames: false,
         };
+
+        function sanitizeKioskConfig(incomingData) {
+          // Iterate through the properties of kioskConfig and copy over only matching keys
+          const allowedKeys = Object.keys(kioskConfig);
+          let sanitizedConfig = {};
+
+          // Ensure that all allowed keys are present with default values
+          for (const key of allowedKeys) {
+            // If the incoming data has the property, use it; otherwise, use the current kioskConfig default
+            sanitizedConfig[key] = incomingData.hasOwnProperty(key)
+              ? incomingData[key]
+              : kioskConfig[key];
+          }
+
+          return sanitizedConfig;
+        }
 
         // Helper Functions
         function validateKioskConfig() {
@@ -1783,35 +1825,23 @@
           try {
             const parsedData = JSON.parse(pasteData);
             if (parsedData && typeof parsedData === "object") {
-              // Update kioskConfig with parsed data
-              kioskConfig = { ...kioskConfig, ...parsedData };
-              // Handle Acquiring related fields
-              if (parsedData.Acquiring) {
-                if (parsedData.Acquiring === "Inpas") {
-                  inpasTerminalIdContainer.style.display = "block";
-                } else {
-                  inpasTerminalIdContainer.style.display = "none";
-                  kioskConfig.InpasTerminalId = ""; // Clear if not Inpas
-                }
+              // Sanitize the parsed data
+              kioskConfig = sanitizeKioskConfig(parsedData);
+
+              // Handle Acquiring-related fields
+              if (kioskConfig.Acquiring === "Inpas") {
+                inpasTerminalIdContainer.style.display = "block";
+              } else {
+                inpasTerminalIdContainer.style.display = "none";
+                kioskConfig.InpasTerminalId = ""; // Clear if not Inpas
               }
+
               // Handle Scanner Switches and Scanner Com Port visibility
-              if (
-                "UseScannerForLoyaltyCards" in parsedData ||
-                "UseScannerForBarcodeProducts" in parsedData
-              ) {
-                kioskConfig.UseScannerForLoyaltyCards =
-                  parsedData.UseScannerForLoyaltyCards ||
-                  kioskConfig.UseScannerForLoyaltyCards;
-                kioskConfig.UseScannerForBarcodeProducts =
-                  parsedData.UseScannerForBarcodeProducts ||
-                  kioskConfig.UseScannerForBarcodeProducts;
-                toggleScannerComPortVisibility();
-              }
-              // Populate form fields
+              toggleScannerComPortVisibility();
+
+              // Populate form fields and update JSON
               populateKioskForm();
-              // Update JSON textarea
               updateKioskJson();
-              // Validate
               validateKioskConfig();
             }
           } catch (error) {
